@@ -1,7 +1,7 @@
 // API Configuration - Update this based on your hosting environment
 // For XAMPP/Local: http://localhost/api
 // For Bluehost: https://yourdomain.com/api
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost/api"
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://www.student.plu.ac.mw/api"
 
 // API Endpoints
 export const API_ENDPOINTS = {
