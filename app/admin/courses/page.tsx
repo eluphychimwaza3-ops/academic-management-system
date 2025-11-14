@@ -167,7 +167,7 @@ export default function CoursesPage() {
       setLecturersLoading(false)
     }
   }
-
+///
   const handleCreateNew = () => {
     setEditingCourse(null)
     setFormData({
