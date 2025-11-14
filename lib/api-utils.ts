@@ -84,6 +84,16 @@ export const usersApi = {
   delete: (id: number) => apiCall("DELETE", API_ENDPOINTS.admin.users, { user_id: id }),
 }
 
+// CRUD operations for lecturers
+export const lecturersApi = {
+  getAll: () => apiCall("GET", API_ENDPOINTS.admin.lecturers),
+  getOne: (id: number) => apiCall("GET", `${API_ENDPOINTS.academic.getResource}?type=lecturer&id=${id}`),
+  create: (data: Record<string, any>) => apiCall("POST", API_ENDPOINTS.admin.lecturers, data),
+  update: (id: number, data: Record<string, any>) =>
+    apiCall("PUT", API_ENDPOINTS.admin.lecturers, { lecturer_id: id, ...data }),
+  delete: (id: number) => apiCall("DELETE", API_ENDPOINTS.admin.lecturers, { lecturer_id: id }),
+}
+
 // CRUD operations for assignments
 export const assignmentsApi = {
   getAll: (lecturerId?: number, studentId?: number) => {

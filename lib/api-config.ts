@@ -15,6 +15,7 @@ export const API_ENDPOINTS = {
     dashboard: `${API_BASE_URL}/admin/dashboard.php`,
     users: `${API_BASE_URL}/admin/users.php`,
     reports: `${API_BASE_URL}/admin/reports.php`,
+    lecturers: `${API_BASE_URL}/admin/lecturers.php`,
   },
   // Academic
   academic: {

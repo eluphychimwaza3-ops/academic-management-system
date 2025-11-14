@@ -11,8 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Plus, Edit, Trash2, AlertCircle, BookOpen, Unlink } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { coursesApi, subjectsApi } from "@/lib/api-utils"
-import { API_BASE_URL } from "@/lib/api-config"
+import { coursesApi, subjectsApi, lecturersApi } from "@/lib/api-utils"
 
 interface Course {
   course_id: number
@@ -113,51 +112,25 @@ export default function CoursesPage() {
     try {
       setLecturersLoading(true)
       console.log("Starting fetchLecturers...")
-      console.log("API_BASE_URL:", API_BASE_URL)
       
-      // Fetch all lecturers with their user information using the API config
-      const url = `${API_BASE_URL}/admin/lecturers.php`
-      console.log("Fetching from:", url)
+      const response = await lecturersApi.getAll()
+      console.log("Lecturers fetch response:", response)
       
-      const response = await fetch(url)
-      
-      console.log("Lecturers fetch response status:", response.status)
-      
-      // Check content type before parsing as JSON
-      const contentType = response.headers.get("content-type")
-      console.log("Lecturers response content-type:", contentType)
-      
-      if (!contentType?.includes("application/json")) {
-        console.error("Invalid response content-type:", contentType)
-        const responseText = await response.text()
-        console.error("Response body:", responseText.substring(0, 200))
-        setLecturers([])
-        setLecturersLoading(false)
-        return
-      }
-      
-      if (!response.ok) {
-        console.error("Failed to fetch lecturers, status:", response.status, response.statusText)
-        setLecturers([])
-        setLecturersLoading(false)
-        return
-      }
-      
-      const data = await response.json()
-      console.log("Fetched lecturers data:", data)
-      console.log("Is array:", Array.isArray(data))
-      console.log("Array length:", Array.isArray(data) ? data.length : "N/A")
-      
-      if (Array.isArray(data) && data.length > 0) {
-        console.log("✓ Lecturers is array with data, count:", data.length)
-        console.log("First lecturer:", data[0])
-        setLecturers(data)
-      } else if (data.data && Array.isArray(data.data) && data.data.length > 0) {
-        console.log("✓ Lecturers wrapped in data, count:", data.data.length)
-        console.log("First lecturer:", data.data[0])
-        setLecturers(data.data)
+      if (response.success && response.data) {
+        const lecturersData = Array.isArray(response.data) ? response.data : response.data.data || []
+        console.log("Fetched lecturers data:", lecturersData)
+        console.log("Array length:", lecturersData.length)
+        
+        if (lecturersData.length > 0) {
+          console.log("✓ Lecturers loaded, count:", lecturersData.length)
+          console.log("First lecturer:", lecturersData[0])
+          setLecturers(lecturersData)
+        } else {
+          console.warn("✗ No lecturers found in response")
+          setLecturers([])
+        }
       } else {
-        console.error("✗ Invalid lecturers data format or empty:", data)
+        console.error("✗ Failed to fetch lecturers:", response.error)
         setLecturers([])
       }
     } catch (err) {
@@ -167,7 +140,7 @@ export default function CoursesPage() {
       setLecturersLoading(false)
     }
   }
-
+///
   const handleCreateNew = () => {
     setEditingCourse(null)
     setFormData({
